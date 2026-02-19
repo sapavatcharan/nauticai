@@ -342,8 +342,8 @@ with tab2:
         c4.metric("Classes",      str(len(model.names)))
 
         # Smart defaults based on actual video properties
-        recommended_skip = max(1, int(fps // 2))       # 2 frames per second
-        recommended_max  = min(300, int(dur * 2))       # covers full video
+        recommended_skip = max(1, int(fps))            # 1 frame per second
+        recommended_max  = min(150, int(dur))           # one check per second max
 
         ca, cb = st.columns(2)
         with ca:
