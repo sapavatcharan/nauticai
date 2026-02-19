@@ -394,9 +394,16 @@ with tab2:
                     ss          = int(current_sec % 60)
                     ts          = str(mm).zfill(2) + ":" + str(ss).zfill(2)
 
+                    # Pick best confidence box per class in this frame first
+                    # so multiple boxes of same class in one frame don't create duplicates
+                    best_per_class = {}
                     for box in res[0].boxes:
                         cn = model.names[int(box.cls[0])]
                         cf = float(box.conf[0])
+                        if cn not in best_per_class or cf > best_per_class[cn]:
+                            best_per_class[cn] = cf
+
+                    for cn, cf in best_per_class.items():
                         smart_log(cn, cf, ts, frame_bytes, class_tracker)
 
                 pc += 1
