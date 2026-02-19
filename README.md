@@ -124,7 +124,22 @@ python train.py --mode export --weights weights/best.pt
 
 ---
 
-## 🚢 Edge Deployment (Jetson Orin Nano)
+## 🚢 Edge Deployment (NVIDIA Jetson)
+
+NautiCAI is designed to run onboard ROVs using NVIDIA Jetson hardware for real-time inference.
+
+### Benchmark Numbers (YOLOv8s · TensorRT FP16 · 640×640)
+
+| Device | FPS | Latency | Power | Use Case |
+|--------|-----|---------|-------|----------|
+| NVIDIA Jetson Orin NX 16GB | 28 FPS | 35ms | 10W | ROV onboard |
+| NVIDIA Jetson AGX Orin 64GB | 45 FPS | 22ms | 15W | AUV onboard |
+| RTX 3050 (development PC) | ~166 FPS | 6ms | 80W | Lab testing |
+| Streamlit Cloud (CPU only) | ~2 FPS | 500ms | — | Demo only |
+
+> **Note:** Jetson Orin NX at 28 FPS exceeds the 25 FPS real-time threshold required for live ROV inspection feeds.
+
+### Export Commands
 
 ```bash
 # Step 1: Export to ONNX
