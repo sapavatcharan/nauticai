@@ -139,9 +139,13 @@ def load_model(p):
     return YOLO(p) if os.path.exists(p) else YOLO('yolov8n.pt')
 
 # ── Session state ─────────────────────────────────────────────────────────────
-for k, v in [('anomaly_log', []), ('det_counts', {}), ('last_img_id', None), ('pdf_bytes', None)]:
-    if k not in st.session_state:
-        st.session_state[k] = v
+try:
+    for k, v in [('anomaly_log', []), ('det_counts', {}), ('last_img_id', None), ('pdf_bytes', None)]:
+        if k not in st.session_state:
+            st.session_state[k] = v
+except Exception:
+    st.error("App is initializing, please wait a moment and refresh the page.")
+    st.stop()
 
 model   = load_model(model_path)
 m_label = "Custom YOLOv8s" if os.path.exists(model_path) else "YOLOv8n Baseline"
@@ -326,6 +330,12 @@ with tab2:
                                 label_visibility="collapsed")
 
     if vid_file:
+        # Check file size — Streamlit Cloud limit is 200MB
+        file_size_mb = vid_file.size / (1024 * 1024)
+        if file_size_mb > 200:
+            st.error("File too large (" + str(round(file_size_mb)) + "MB). Please upload a video under 200MB.")
+            st.stop()
+
         tfile = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
         tfile.write(vid_file.read())
         tfile.flush()
