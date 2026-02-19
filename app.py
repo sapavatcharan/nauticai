@@ -309,9 +309,17 @@ with tab2:
         c3.metric("Duration",     f"{dur:.1f}s")
         c4.metric("Classes",      f"{len(model.names)}")
 
+        # Auto-calculate smart defaults based on video length
+        recommended_skip = max(1, int(fps // 2))   # process 2 frames per second
+        recommended_max  = min(200, int(dur * 2))   # 2 checks per second across full video
+
         ca, cb = st.columns(2)
-        with ca: skip = st.slider("Process every N frames", 1, 15, 8)
-        with cb: maxf = st.slider("Max frames to scan", 10, 200, 60)
+        with ca: skip = st.slider("Process every N frames", 1, 30, recommended_skip,
+                                   help=f"Recommended: {recommended_skip} (2 frames/sec)")
+        with cb: maxf = st.slider("Max frames to scan", 10, 300, recommended_max,
+                                   help=f"Recommended: {recommended_max} (covers full {dur:.0f}s video)")
+
+        st.info(f"⚡ Will scan **{recommended_max} frames** every **{recommended_skip} frames** → covers the full **{dur:.0f}s** video")
 
         if st.button("▶   Start Video Analysis"):
             placeholder = st.empty()
