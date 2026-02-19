@@ -14,6 +14,12 @@ from ultralytics import YOLO
 from underwater_augment import apply_full_underwater_simulation
 from report_gen import generate_report
 
+# Guard against SessionInfo not initialized error on cold start
+import streamlit.runtime.scriptrunner as _sr
+if not _sr.get_script_run_ctx():
+    import sys
+    sys.exit(0)
+
 st.set_page_config(
     page_title="NautiCAI - Explore Safer Seas",
     page_icon="🌊",
